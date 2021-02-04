@@ -19,6 +19,8 @@ public class CS2420ClassGenericTester {
 
 	private CS2420ClassGeneric<MailingAddress> verySmallClass;
 	private CS2420ClassGeneric<PhoneNumber> largeClass;
+	private CS2420ClassGeneric<PhoneNumber> oneStudent;
+	
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -29,6 +31,16 @@ public class CS2420ClassGenericTester {
 				new MailingAddress("156 Main St.", "Lebanon", "VA", 24266)));
 		verySmallClass.addStudent(new CS2420StudentGeneric<MailingAddress>("Riley", "Nguyen", 4545454,
 				new MailingAddress("2044 State St.", "Lebanon", "PA", 17042)));
+		
+		oneStudent = new CS2420ClassGeneric<PhoneNumber>();
+		oneStudent.addStudent(new CS2420StudentGeneric<PhoneNumber>("Jane", "Doe", 1010101,
+		new PhoneNumber("801-555-1111")));
+		oneStudent.addScore(1010101, 0.0, "assignment");
+		oneStudent.addScore(1010101, 0.0, "lab");
+		oneStudent.addScore(1010101, 0.0, "lab");
+		oneStudent.addScore(1010101, 0.0, "quiz");
+		oneStudent.addScore(1010101, 0.0, "quiz");
+		oneStudent.addScore(1010101, 0.0, "exam");
 
 		largeClass = new CS2420ClassGeneric<PhoneNumber>();
 		PhoneNumber[] sharedNums = new PhoneNumber[5];
@@ -296,5 +308,9 @@ public class CS2420ClassGenericTester {
 		assertEquals(85.65, largeClass.computeClassAverage(), 0.001);
 	}
 
+	@Test
+	public void sortByScoreFail() {
+		assertEquals(0, oneStudent.getOrderedByScore(1.0).size());
+	}
 
 }

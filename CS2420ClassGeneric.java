@@ -161,14 +161,21 @@ public ArrayList<CS2420StudentGeneric<Type>> getOrderedByScore(double cutoffScor
    	 studentListCopy.add(student);
 
     sort(studentListCopy, new OrderByScore());
-
-    for(int i = 0; i < studentListCopy.size(); i++) {
-    	if(studentListCopy.get(i).computeFinalScore() < cutoffScore) {
-    		studentListCopy.remove(i);
+    ArrayList<CS2420StudentGeneric<Type>> shortenedList = new ArrayList<CS2420StudentGeneric<Type>>();
+    
+    for (CS2420StudentGeneric<Type> student: studentListCopy) {
+    	if (student.computeFinalScore() >= cutoffScore) {
+    		shortenedList.add(student);
     	}
     }
+    //old method, likely doesnt work.
+//    for(int i = 0; i < studentListCopy.size(); i++) {
+//    	if(studentListCopy.get(i).computeFinalScore() < cutoffScore) {
+//    		studentListCopy.remove(i);
+//    	}
+//    }
     
-    return studentListCopy;
+    return shortenedList;
 }
 
 /**
