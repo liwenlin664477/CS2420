@@ -84,7 +84,7 @@ public class UofUStudent {
 
 		UofUStudent rhs = (UofUStudent) other;
 		// Check is the other uNID equal to this student uNID
-		if (this.uNID == rhs.uNID && this.lastName == rhs.lastName &&this.firstName == rhs.firstName) {
+		if (this.uNID == rhs.uNID && this.lastName.equals(rhs.lastName) &&this.firstName.equals(rhs.firstName)) {
 			return true;
 		}
 		return false;

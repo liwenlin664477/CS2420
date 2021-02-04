@@ -1,5 +1,7 @@
 package assign02;
 
+import java.util.ArrayList;
+
 /** A class for a CS2420 Student. Will contain firstName, lastName, and uNID from UofUStudent, 
  *  and will also contain an EMAIL ADRESS and scores for tests.
  * @author Carter Edginton & Wenlin Li
@@ -11,14 +13,10 @@ public class CS2420Student extends UofUStudent {
 	//Private instance variables.
 	private EmailAddress email;
 	
-	private double assignmentScore;
-	private int assignmentAmount;
-	private double examScore;
-	private int examAmount;
-	private double labScore;
-	private int labAmount;
-	private double quizScore;
-	private int quizAmount;
+	private ArrayList<Double> assignments = new ArrayList<Double>();
+	private ArrayList<Double> exams = new ArrayList<Double>();
+	private ArrayList<Double> labs = new ArrayList<Double>();
+	private ArrayList<Double> quizzes = new ArrayList<Double>();
 	
 	
 	
@@ -50,44 +48,85 @@ public class CS2420Student extends UofUStudent {
 	public void addScore(double score, String category) {
 		switch (category) {
 			case "assignment":
-				this.assignmentScore += score;
-				this.assignmentAmount++;
+				this.assignments.add(Double.valueOf(score));
 				break;
 			case "exam":
-				this.examScore += score;
-				this.examAmount++;
+				this.exams.add(Double.valueOf(score));
 				break;
 			case "lab":
-				this.labScore += score;
-				this.labAmount++;
+				this.labs.add(Double.valueOf(score));
 				break;
 			case "quiz":
-				this.quizScore += score;
-				this.quizAmount++;
+				this.quizzes.add(Double.valueOf(score));
 				break;
 		}
 	}
 	
-	private double calculateWeightedPercentage(double theScore, int theAmount, double thePercent) {
-		double weight = (theScore/(theAmount*100.0)) * thePercent; //score / total possible score, then multiplied by percentage.
-		return weight;
+	/**Helper method for computeFinalScore()
+	 * 
+	 * @param theScore
+	 * @param thePercent
+	 * @param dropLowest if you want to drop the lowest score, make this true.
+	 * @return returns the weighted score. add these 
+	 */
+	private double calculateWeightedPercentage(ArrayList<Double> theScore, double thePercent, Boolean dropLowest) {
+		//if dropLowest is true, then find the lowest score to exclude. 
+		if (dropLowest) {
+			ArrayList<Double> droppedList = new ArrayList<Double>();
+			double lowest = theScore.get(0);
+			int lowestIdx = 0;
+			for (int idx = 0; idx < theScore.size(); idx++) {
+				if (theScore.get(idx) < lowest) {
+					lowest = theScore.get(idx);
+					lowestIdx = idx;
+				}
+			}//at this point we will have found the lowest score and its index. 
+			for (int idx = 0; idx < lowestIdx; idx++) {
+				droppedList.add(theScore.get(idx));
+			}
+			for (int idx = lowestIdx + 1; idx < theScore.size(); idx++) {
+				droppedList.add(theScore.get(idx)); 
+			}
+			return calculateWeightedPercentage(droppedList, thePercent, false); //saves on code by pretending its not dropped.
+			
+		}else { //this is the code for if a score is NOT dropped.
+			double totalScore = 0.0;
+			for (Double scores: theScore) {
+				totalScore += scores;
+			}
+			return (totalScore/(100.0*theScore.size())) * thePercent ;
+			
+		}
+		
+		
+		
 	}
 	
+	/** Computes the final percentage of all scores for a student. Will not function properly without 
+	 * 1 score in assignments and exams,
+	 * 2 scores in labs and quizzes. 
+	 * 
+	 * @return 0.0 if not enough scores or student receives 0 on everything. 
+	 */
 	public double computeFinalScore() {
-		if (this.assignmentAmount < 1 || this.examAmount < 1 || this.labAmount < 2 || this.quizAmount < 2) {
+		if (this.assignments.size() < 1 || this.exams.size() < 1 || this.labs.size() < 2 || this.quizzes.size() < 2) {
 			return 0.0; // minimum amount of all types of assignment for class. 
 		}
 		//calculate the final score. Do this by calculating percentage of type, multiply by weight, add all together.
 		double totalScore = 0.0;
-		totalScore += calculateWeightedPercentage(this.assignmentScore, this.assignmentAmount, 0.5);
-		totalScore += calculateWeightedPercentage(this.examScore, this.examAmount, 0.3);
-		totalScore += calculateWeightedPercentage(this.labScore, this.labAmount, 0.1);
-		totalScore += calculateWeightedPercentage(this.quizScore, this.quizAmount, 0.1);
-		return totalScore;
+		totalScore += calculateWeightedPercentage(this.assignments, .5, false);
+		totalScore += calculateWeightedPercentage(this.exams, 0.3, false);
+		totalScore += calculateWeightedPercentage(this.labs, 0.1, true);
+		totalScore += calculateWeightedPercentage(this.quizzes, 0.1, true);
+		return totalScore * 100; //the 100 is for bringing to what the number looks as a % eg 99.9% rather than .999
 	}
 
+	/** Calculates what the final letter grade of all your different scores will be. uses computeFinalScore().
+	 * 
+	 * @return
+	 */
 	public String computeFinalGrade() {
-		if (this.assignmentAmount < 1 || this.examAmount < 1 || this.labAmount < 2 || this.quizAmount < 2) {
+		if (this.assignments.size() < 1 || this.exams.size() < 1 || this.labs.size() < 2 || this.quizzes.size() < 2) {
 			return "N/A"; // minimum amount of all types of assignment for class. 
 		}
 			double myScore = this.computeFinalScore();
