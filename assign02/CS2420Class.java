@@ -49,9 +49,10 @@ public class CS2420Class {
 	 * @return the CS 2420 student with the given uNID, or null if no such student exists in the collection
 	 */
 	public CS2420Student lookup(int uNID) {
-		for (CS2420Student student: studentList) {
-			if (student.getUNID() == uNID) {
-				return student;
+//		for (CS2420Student student: studentList) {
+		for (int idx = 0; idx < studentList.size(); idx++) {
+			if (studentList.get(idx).getUNID() == uNID) {
+				return studentList.get(idx);
 			}
 		}
 		return null;
@@ -66,12 +67,12 @@ public class CS2420Class {
 	 */
 	public ArrayList<CS2420Student> lookup(EmailAddress contactInfo) {
 		ArrayList<CS2420Student> allWithEmail = new ArrayList<CS2420Student>();
-		for (CS2420Student student: this.studentList) {
-			if (student.getContactInfo().equals(contactInfo)) {
-				allWithEmail.add(student);
+		for (int idx = 0; idx < this.studentList.size(); idx++) {
+			if (this.studentList.get(idx).getContactInfo().equals(contactInfo)) {
+				allWithEmail.add(this.studentList.get(idx));
 			}
 		}
-		return null;
+		return allWithEmail;
 	}
 	
 	/**

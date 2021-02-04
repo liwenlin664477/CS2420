@@ -94,7 +94,7 @@ public class CS2420Student extends UofUStudent {
 			for (Double scores: theScore) {
 				totalScore += scores;
 			}
-			return (totalScore/(100*theScore.size())) * thePercent ;
+			return (totalScore/(100.0*theScore.size())) * thePercent ;
 			
 		}
 		
@@ -118,7 +118,7 @@ public class CS2420Student extends UofUStudent {
 		totalScore += calculateWeightedPercentage(this.exams, 0.3, false);
 		totalScore += calculateWeightedPercentage(this.labs, 0.1, true);
 		totalScore += calculateWeightedPercentage(this.quizzes, 0.1, true);
-		return totalScore;
+		return totalScore * 100; //the 100 is for bringing to what the number looks as a % eg 99.9% rather than .999
 	}
 
 	/** Calculates what the final letter grade of all your different scores will be. uses computeFinalScore().
